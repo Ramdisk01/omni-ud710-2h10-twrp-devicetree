@@ -1,16 +1,56 @@
-```markdown
+
 # TWRP Device Tree for UNISOC UD710 (Tiger T710)
 
 Minimal TWRP device tree for UD710-based devices with eMMC/UFS. Includes prebuilt kernel, FBE decryption, and essential recovery components.
+（You can find the eMMC and UFS versions of the tree from different branches.）
 
-## Adapting for Your Device
+UD710 New Device Adaptation Checklist
 
-To use this tree on another UD710 device:
+When using this tree for another UD710 device, verify/modify the following:
 
-1. Edit `BoardConfig.mk`: adjust `TARGET_DEVICE`, kernel command line, partition sizes.
-2. Replace `prebuilt/Image.gz-dtb` with your device's kernel if needed.
-3. Update `recovery.fstab` with correct partition names and mount points.
-4. Rename `omni_ud710_2h10.mk` to `omni_<device>.mk` and adjust contents.
+1. Kernel & DTBO
+
+· Replace prebuilt/Image.gz-dtb and prebuilt/dtbo.img with your device's kernel and dtbo.
+
+2. Touch Firmware
+
+· If your device requires touch firmware files (e.g., .bin), place them under recovery/root/vendor/firmware/ (though not necessarily this path). Ensure they are properly referenced.
+
+3. Partition Layout
+
+· Update recovery.fstab with correct block device paths (/dev/block/by-name/...) and filesystem types.
+· Adjust partition sizes in BoardConfig.mk:
+  · BOARD_{SYSTEM,VENDOR,PRODUCT,...}_IMAGE_PARTITION_SIZE
+  · If using super partitions, set BOARD_SUPER_PARTITION_SIZE and group sizes.
+
+4. Device-Specific Variables (BoardConfig.mk)
+
+· TARGET_DEVICE – set to your device codename.
+· TARGET_OTA_ASSERT_DEVICE – comma-separated list of devices this tree supports.
+· TARGET_RECOVERY_PIXEL_FORMAT – usually RGBX_8888 or BGRA_8888; check your display.
+· Display resolution: TW_THEME (e.g., watch_mdpi, portrait_hdpi), and optionally TW_DEVICE_WIDTH/HEIGHT in BoardConfig.mk.
+· TW_ROTATION – set to 0, 90, 180, or 270 depending on screen orientation.
+
+5. Binary Compatibility
+
+· If your device runs a different Android version (e.g., 10/11), update the binaries in recovery/root/ (e.g., vold, gatekeeper, keymaster) with ones extracted from your device.
+· Pay attention to library dependencies – replace .so files under recovery/root/vendor/lib64/ as needed.
+
+6. SELinux
+
+· After building, flash recovery and check if SELinux is permissive (getenforce in adb shell). If not, manually apply the patch in patches/permissive-selinux.patch:
+  · Edit system/core/init/selinux.cpp in your source tree according to the patch.
+  · Note: Adding androidboot.selinux=permissive to BOARD_KERNEL_CMDLINE is ineffective; Spreadtrum devices read cmdline only from dtb.
+
+7. Ueventd
+
+· Review recovery/root/ueventd.rc and ensure device nodes (e.g., touch, display) match your kernel’s sysfs paths. Add missing entries if needed.
+
+8. Init Scripts
+
+· If your device requires special services (e.g., for touch, keymaster), modify recovery/root/init.recovery.service.rc or add a device-specific .rc file.
+
+Once all items are checked, follow the build instructions in the main README.
 
 
 ## Building
@@ -29,8 +69,4 @@ make recoveryimage -j$(nproc --all)
 Output: out/target/product/ud710_2h10/recovery.img
 
 Credits
-
-· Atlas for decryption help
-· OmniROM team for TWRP base
-
-```
+· Atlas - providing FBE crypto solutions for the TWRP of Spreadtrum
