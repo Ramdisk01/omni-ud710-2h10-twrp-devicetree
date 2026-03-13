@@ -26,4 +26,4 @@ PRODUCT_GMS_CLIENTID_BASE := android-sprd
 PRODUCT_BUILD_PROP_OVERRIDES += \
     PRIVATE_BUILD_DESC="ud710_2h10_native_noorca-user 9 PPR1.180610.011 44101 release-keys"
 
-BUILD_FINGERPRINT := SPRD/ud710_2h10_native_noorca/ud710_2h10:9/PPR1.180610.011/10310118:user/release-keys
+# BUILD_FINGERPRINT := SPRD/ud710_2h10_native_noorca/ud710_2h10:9/PPR1.180610.011/10310118:user/release-keys
