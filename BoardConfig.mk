@@ -40,6 +40,7 @@ TARGET_USES_64_BIT_BINDER := true
 # APEX
 OVERRIDE_TARGET_FLATTEN_APEX := true
 
+
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := ud710_2h10
 TARGET_NO_BOOTLOADER := true
@@ -85,9 +86,6 @@ TARGET_COPY_OUT_VENDOR := vendor
 TARGET_COPY_OUT_PRODUCT := product
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
 
-# Display
-TARGET_RECOVERY_PIXEL_FORMAT := BGRA_8888
-TARGET_SCREEN_DENSITY := 320
 
 # Verified Boot
 BOARD_AVB_ENABLE := true
@@ -130,3 +128,12 @@ TW_CRYPTO_SYSTEM_VOLD_DEBUG := true
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
 PLATFORM_VERSION := 16.1.0
+
+# Display
+TARGET_RECOVERY_PIXEL_FORMAT := BGRA_8888    # Check the pixel format by running the command 'dumpsys SurfaceFlinger | grep -i format' on the main system.
+TARGET_SCREEN_DENSITY := 320
+
+## Other config
+# TARGET_OTA_ASSERT_DEVICE :=   # Check the value by running the command 'getprop ro.puoduct.device' on the main system.
+# TW_ROTATION :=    # set to 0, 90, 180, or 270 depending on screen orientation.
+# TARGET_DEVICE := 
